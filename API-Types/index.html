@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Cheat-Card</title>
+<!-- Centralized CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Highlight.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+  <!-- Highlight.js Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <h3>🚀 API Navigation</h3>
+    
+    <a href="#introduction" class="nav-item" onclick="setActive(this)">
+      📖 ¿Qué es una API?
+    </a>
+    
+    <a href="#types" class="nav-item" onclick="setActive(this)">
+      🏷️ Tipos principales
+    </a>
+    
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      <a href="#examples" class="nav-item" onclick="setActive(this)">
+        💻 Ejemplos en Python
+      </a>
+      <a href="#rest-example" class="nav-subitem" onclick="setActive(this)">
+        🔗 REST
+      </a>
+      <a href="#graphql-example" class="nav-subitem" onclick="setActive(this)">
+        🧬 GraphQL
+      </a>
+      <a href="#soap-example" class="nav-subitem" onclick="setActive(this)">
+        📜 SOAP
+      </a>
+      <a href="#webhook-example" class="nav-subitem" onclick="setActive(this)">
+        📩 Webhook
+      </a>
+      <a href="#websocket-example" class="nav-subitem" onclick="setActive(this)">
+        🌐 WebSockets
+      </a>
+      
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12);">
+        <a href="api_quiz.html" class="nav-item" onclick="setActive(this)">
+          🎯 Take API Quiz
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+    <h1>API Cheat‑Card</h1>
+
+    <section id="introduction">
+      <h2>¿Qué es una API?</h2>
+      <p>Un mensajero digital entre tu app y un servidor: tú pides datos y él te los trae.</p>
+    </section>
+
+    <section id="types">
+      <h2>Tipos principales</h2>
+      <div class="api-box"><h3>🔗 REST</h3><p>URLs como /users/3. Simple y universal.</p></div>
+      <div class="api-box"><h3>🧬 GraphQL</h3><p>Un solo endpoint; pides exactamente lo que necesitas.</p></div>
+      <div class="api-box"><h3>📜 SOAP</h3><p>XML, formal, usado en grandes corporaciones.</p></div>
+      <div class="api-box"><h3>📩 Webhooks</h3><p>El servidor te envía eventos cuando ocurren.</p></div>
+      <div class="api-box"><h3>🌐 WebSockets</h3><p>Comunicación en tiempo real.</p></div>
+    </section>
+
+    <section id="examples">
+      <h2>Ejemplos en Python</h2>
+
+      <h3 id="rest-example">REST</h3>
+      <pre><code class="language-python">import requests
+r = requests.get("https://api.example.com/users/1")
+print(r.json())</code></pre>
+
+      <h3 id="graphql-example">GraphQL</h3>
+      <pre><code class="language-python">import requests
+query = """
+query { user(id: 1) { name email } }
+"""
+r = requests.post("https://api.example.com/graphql", json={"query": query})
+print(r.json())</code></pre>
+
+      <h3 id="soap-example">SOAP</h3>
+      <pre><code class="language-python">from zeep import Client
+client = Client("https://example.com/service?wsdl")
+print(client.service.GetUser(id=1))</code></pre>
+
+      <h3 id="webhook-example">Webhook</h3>
+      <pre><code class="language-python">from fastapi import FastAPI, Request
+app = FastAPI()
+@app.post("/webhook")
+async def webhook(req: Request):
+    print(await req.json())</code></pre>
+
+      <h3 id="websocket-example">WebSockets</h3>
+      <pre><code class="language-python">import websockets, asyncio
+async def main():
+    async with websockets.connect("wss://echo.websocket.events") as ws:
+        await ws.send("hola")
+        print(await ws.recv())
+asyncio.run(main())</code></pre>
+
+    </section>
+    
+    <!-- Quiz Call-to-Action -->
+    <section style="text-align: center; margin-top: 40px;">
+      <h2>🎯 Test Your Knowledge!</h2>
+      <p style="margin-bottom: 20px; color: #94a3b8;">Ready to test what you've learned about APIs?</p>
+      <a href="api_quiz.html" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; text-decoration: none; padding: 15px 30px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(124,58,237,0.4);" 
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(124,58,237,0.6)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(124,58,237,0.4)'">
+        🚀 Take the API Quiz
+      </a>
+    </section>
+    </div>
+  </div>
+
+  <!-- Centralized JavaScript -->
+  <script src="scripts.js"></script>
+</body>
+</html>
