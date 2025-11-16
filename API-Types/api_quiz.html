@@ -213,15 +213,15 @@
   <nav class="sidebar" id="sidebar">
     <h3>🎮 Quiz Navigation</h3>
     
-    <a href="#" class="nav-item" onclick="restartQuiz()">
+    <a href="#" class="nav-item" onclick="setActive(this); restartQuiz()">
       🔄 Restart Quiz
     </a>
     
-    <a href="#" class="nav-item" onclick="showResults()">
+    <a href="#" class="nav-item" onclick="setActive(this); showResults()">
       📊 View Results
     </a>
     
-    <a href="index.html" class="nav-item">
+    <a href="index.html" class="nav-item" onclick="setActive(this)">
       📖 Back to API Info
     </a>
     
