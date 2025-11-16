@@ -213,6 +213,10 @@
   <nav class="sidebar" id="sidebar">
     <h3>🎮 Quiz Navigation</h3>
     
+    <a href="#" class="nav-item" onclick="setActive(this); toggleRandomization()" id="randomize-btn">
+      🎲 Order: Sequential
+    </a>
+    
     <a href="#" class="nav-item" onclick="setActive(this); restartQuiz()">
       🔄 Restart Quiz
     </a>
@@ -288,6 +292,7 @@
   <!-- Page-specific JavaScript -->
   <script>
     const quizQuestions = [
+      // Beginner Level - Basic Concepts
       {
         question: "¿Qué es una API?",
         options: [
@@ -296,7 +301,8 @@
           "Una base de datos",
           "Un sistema operativo"
         ],
-        correct: 1
+        correct: 1,
+        level: "beginner"
       },
       {
         question: "¿Cuál es la característica principal de REST APIs?",
@@ -306,77 +312,8 @@
           "Requiere conexión permanente",
           "Solo funciona con JavaScript"
         ],
-        correct: 1
-      },
-      {
-        question: "¿Qué permite GraphQL que las otras APIs no hacen?",
-        options: [
-          "Conexión en tiempo real",
-          "Pedir exactamente lo que necesitas en un solo endpoint",
-          "Enviar eventos automáticamente",
-          "Funcionar sin internet"
-        ],
-        correct: 1
-      },
-      {
-        question: "¿Qué tipo de API usa XML y es muy formal?",
-        options: [
-          "REST",
-          "GraphQL",
-          "SOAP",
-          "WebSocket"
-        ],
-        correct: 2
-      },
-      {
-        question: "¿Cómo funcionan los Webhooks?",
-        options: [
-          "El cliente pide datos constantemente",
-          "El servidor envía eventos cuando ocurren",
-          "Usan URLs complejas",
-          "Solo funcionan con Python"
-        ],
-        correct: 1
-      },
-      {
-        question: "¿Para qué se usan principalmente los WebSockets?",
-        options: [
-          "Para descargar archivos grandes",
-          "Para comunicación en tiempo real",
-          "Para almacenar datos",
-          "Para autenticación"
-        ],
-        correct: 1
-      },
-      {
-        question: "¿Qué librería Python se usa comúnmente para REST APIs?",
-        options: [
-          "zeep",
-          "websockets",
-          "requests",
-          "fastapi"
-        ],
-        correct: 2
-      },
-      {
-        question: "¿Qué librería se usa para SOAP en Python?",
-        options: [
-          "requests",
-          "zeep",
-          "websockets",
-          "flask"
-        ],
-        correct: 1
-      },
-      {
-        question: "¿En qué escenario usarías un Webhook?",
-        options: [
-          "Para obtener datos de un usuario",
-          "Para recibir notificaciones de pagos",
-          "Para subir archivos",
-          "Para hacer cálculos matemáticos"
-        ],
-        correct: 1
+        correct: 1,
+        level: "beginner"
       },
       {
         question: "¿Qué método HTTP se usa comúnmente para obtener datos en REST?",
@@ -386,7 +323,254 @@
           "DELETE",
           "GET"
         ],
-        correct: 3
+        correct: 3,
+        level: "beginner"
+      },
+      {
+        question: "¿Qué permite GraphQL que las otras APIs no hacen?",
+        options: [
+          "Conexión en tiempo real",
+          "Pedir exactamente lo que necesitas en un solo endpoint",
+          "Enviar eventos automáticamente",
+          "Funcionar sin internet"
+        ],
+        correct: 1,
+        level: "beginner"
+      },
+      {
+        question: "¿Qué tipo de API usa XML y es muy formal?",
+        options: [
+          "REST",
+          "GraphQL",
+          "SOAP",
+          "WebSocket"
+        ],
+        correct: 2,
+        level: "beginner"
+      },
+      {
+        question: "¿Cómo funcionan los Webhooks?",
+        options: [
+          "El cliente pide datos constantemente",
+          "El servidor envía eventos cuando ocurren",
+          "Usan URLs complejas",
+          "Solo funcionan con Python"
+        ],
+        correct: 1,
+        level: "beginner"
+      },
+      {
+        question: "¿Para qué se usan principalmente los WebSockets?",
+        options: [
+          "Para descargar archivos grandes",
+          "Para comunicación en tiempo real",
+          "Para almacenar datos",
+          "Para autenticación"
+        ],
+        correct: 1,
+        level: "beginner"
+      },
+      
+      // Intermediate Level - Technical Details
+      {
+        question: "¿Qué principio REST requiere que cada solicitud contenga toda la información necesaria?",
+        options: [
+          "Client-Server",
+          "Stateless",
+          "Cacheable",
+          "Layered System"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué librería Python se usa comúnmente para REST APIs?",
+        options: [
+          "zeep",
+          "websockets",
+          "requests",
+          "fastapi"
+        ],
+        correct: 2,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué librería se usa para SOAP en Python?",
+        options: [
+          "requests",
+          "zeep",
+          "websockets",
+          "flask"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      {
+        question: "¿En qué escenario usarías un Webhook?",
+        options: [
+          "Para obtener datos de un usuario",
+          "Para recibir notificaciones de pagos",
+          "Para subir archivos",
+          "Para hacer cálculos matemáticos"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué método HTTP se usa para crear nuevos recursos en REST?",
+        options: [
+          "GET",
+          "POST",
+          "PUT",
+          "PATCH"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué es un endpoint en una API REST?",
+        options: [
+          "El servidor donde se ejecuta la API",
+          "Una URL específica que representa un recurso",
+          "El protocolo de comunicación",
+          "El formato de los datos"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué significa 'stateless' en el contexto de REST?",
+        options: [
+          "La API no tiene estado de conexión",
+          "Cada solicitud es independiente y contiene toda la información",
+          "El servidor no guarda información del cliente",
+          "Todas las anteriores"
+        ],
+        correct: 3,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué tipo de dato usa principalmente SOAP?",
+        options: [
+          "JSON",
+          "XML",
+          "CSV",
+          "YAML"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      {
+        question: "¿Qué es un schema en GraphQL?",
+        options: [
+          "La base de datos donde se guardan los datos",
+          "La definición de tipos y consultas posibles",
+          "El servidor de GraphQL",
+          "El cliente que consume la API"
+        ],
+        correct: 1,
+        level: "intermediate"
+      },
+      
+      // Advanced Level - Complex Concepts
+      {
+        question: "¿Qué es HATEOAS en REST?",
+        options: [
+          "Un protocolo de autenticación",
+          "Hypermedia as the Engine of Application State",
+          "Un formato de datos",
+          "Un tipo de base de datos"
+        ],
+        correct: 1,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué diferencia principal hay entre PUT y PATCH en REST?",
+        options: [
+          "PUT usa JSON y PATCH usa XML",
+          "PUT reemplaza completamente, PATCH modifica parcialmente",
+          "PATCH es más rápido que PUT",
+          "No hay diferencia, son sinónimos"
+        ],
+        correct: 1,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué es un WebSocket handshake?",
+        options: [
+          "El protocolo de actualización de HTTP a WebSocket",
+          "Un tipo de autenticación",
+          "El formato de los mensajes",
+          "Un error de conexión"
+        ],
+        correct: 0,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué significa 'idempotent' en relación a métodos HTTP?",
+        options: [
+          "Que puede ejecutarse múltiples veces con el mismo resultado",
+          "Que funciona sin conexión",
+          "Que es seguro para datos sensibles",
+          "Que requiere autenticación"
+        ],
+        correct: 0,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué es un resolvers en GraphQL?",
+        options: [
+          "Los clientes que consumen la API",
+          "Funciones que proporcionan los datos para cada campo",
+          "El servidor de base de datos",
+          "Los tipos de datos definidos"
+        ],
+        correct: 1,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué protocolo usan los WebSockets por defecto?",
+        options: [
+          "HTTP",
+          "HTTPS",
+          "WS (WebSocket) y WSS (WebSocket Secure)",
+          "FTP"
+        ],
+        correct: 2,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué es un payload en el contexto de APIs?",
+        options: [
+          "El servidor de la API",
+          "Los datos transportados en una solicitud o respuesta",
+          "La autenticación de la API",
+          "La velocidad de respuesta"
+        ],
+        correct: 1,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué significa CORS en el contexto de APIs web?",
+        options: [
+          "Cross-Origin Resource Sharing",
+          "Centralized Online Request System",
+          "Client-Oriented Response Service",
+          "Cache Optimization Resource System"
+        ],
+        correct: 0,
+        level: "advanced"
+      },
+      {
+        question: "¿Qué es un middleware en el contexto de APIs?",
+        options: [
+          "Un tipo de base de datos",
+          "Software que se ejecuta entre el cliente y el servidor",
+          "Un protocolo de comunicación",
+          "Un formato de respuesta"
+        ],
+        correct: 1,
+        level: "advanced"
       }
     ];
 
@@ -394,10 +578,106 @@
     let score = 0;
     let answers = [];
     let selectedOption = null;
+    let isRandomized = false;
+    let originalQuestions = [...quizQuestions];
+
+    // Sound effects system
+    class SoundEffects {
+      constructor() {
+        this.audioContext = null;
+        this.enabled = true;
+        this.initAudio();
+      }
+
+      initAudio() {
+        try {
+          window.AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.audioContext = new AudioContext();
+        } catch (e) {
+          console.log('Web Audio API not supported');
+          this.enabled = false;
+        }
+      }
+
+      playSound(frequency, duration, type = 'sine') {
+        if (!this.enabled || !this.audioContext) return;
+
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+
+        oscillator.frequency.value = frequency;
+        oscillator.type = type;
+
+        gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+      }
+
+      playCorrect() {
+        this.playSound(523.25, 0.1); // C5
+        setTimeout(() => this.playSound(659.25, 0.1), 100); // E5
+        setTimeout(() => this.playSound(783.99, 0.1), 200); // G5
+      }
+
+      playIncorrect() {
+        this.playSound(220, 0.2, 'sawtooth'); // A3
+        setTimeout(() => this.playSound(165, 0.3, 'sawtooth'), 200); // E3
+      }
+
+      playClick() {
+        this.playSound(440, 0.05); // A4
+      }
+
+      playNext() {
+        this.playSound(523.25, 0.1); // C5
+        setTimeout(() => this.playSound(587.33, 0.1), 50); // D5
+      }
+
+      playComplete() {
+        this.playSound(523.25, 0.1); // C5
+        setTimeout(() => this.playSound(659.25, 0.1), 100); // E5
+        setTimeout(() => this.playSound(783.99, 0.1), 200); // G5
+        setTimeout(() => this.playSound(1046.50, 0.2), 300); // C6
+      }
+    }
+
+    const sounds = new SoundEffects();
+
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function toggleRandomization() {
+      isRandomized = !isRandomized;
+      if (isRandomized) {
+        quizQuestions = shuffleArray(originalQuestions);
+        document.getElementById('randomize-btn').innerHTML = '🎲 Order: Random';
+      } else {
+        quizQuestions = [...originalQuestions];
+        document.getElementById('randomize-btn').innerHTML = '🎲 Order: Sequential';
+      }
+      restartQuiz();
+      sounds.playClick();
+    }
 
     function loadQuestion() {
       const question = quizQuestions[currentQuestion];
       document.getElementById('question').textContent = question.question;
+      
+      // Add level indicator
+      const levelText = question.level === 'beginner' ? '🟢 Principiante' :
+                       question.level === 'intermediate' ? '🟡 Intermedio' : '🔴 Avanzado';
+      document.getElementById('question').innerHTML += ` <span style="font-size: 0.8rem; opacity: 0.7;">${levelText}</span>`;
       
       const optionsContainer = document.getElementById('options');
       optionsContainer.innerHTML = '';
@@ -423,6 +703,8 @@
     }
 
     function selectOption(index) {
+      sounds.playClick();
+      
       // Remove previous selection
       document.querySelectorAll('.option').forEach(option => {
         option.classList.remove('selected');
@@ -441,12 +723,16 @@
       const options = document.querySelectorAll('.option');
       
       // Show correct/incorrect
-      options[selectedOption].classList.add(
-        selectedOption === question.correct ? 'correct' : 'incorrect'
-      );
+      const isCorrect = selectedOption === question.correct;
+      options[selectedOption].classList.add(isCorrect ? 'correct' : 'incorrect');
       
-      if (selectedOption === question.correct) {
+      if (isCorrect) {
         score++;
+        sounds.playCorrect();
+      } else {
+        sounds.playIncorrect();
+        // Show the correct answer
+        options[question.correct].classList.add('correct');
       }
       
       answers[currentQuestion] = selectedOption;
@@ -459,7 +745,9 @@
       
       // Enable next button or show results
       if (currentQuestion < quizQuestions.length - 1) {
-        document.getElementById('next-btn').disabled = false;
+        setTimeout(() => {
+          document.getElementById('next-btn').disabled = false;
+        }, 500);
       } else {
         setTimeout(showResults, 1500);
       }
@@ -476,6 +764,7 @@
       if (currentQuestion > 0) {
         currentQuestion--;
         loadQuestion();
+        sounds.playClick();
       }
     }
 
@@ -494,6 +783,7 @@
     }
 
     function showResults() {
+      sounds.playComplete();
       const percentage = Math.round((score / quizQuestions.length) * 100);
       document.getElementById('quiz-content').classList.add('hidden');
       document.getElementById('result-container').classList.remove('hidden');
@@ -527,6 +817,7 @@
       document.getElementById('quiz-content').classList.remove('hidden');
       document.getElementById('result-container').classList.add('hidden');
       
+      sounds.playClick();
       loadQuestion();
     }
 
