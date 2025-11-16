@@ -100,6 +100,106 @@
             color: var(--madder);
         }
 
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-right: 1px solid #e0e0e0;
+            padding: 30px 20px;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--folly);
+            border: none;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 47, 87, 0.3);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--madder);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(162, 0, 33, 0.4);
+        }
+
+        .sidebar h3 {
+            color: var(--madder);
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(245, 47, 87, 0.1);
+            border-color: rgba(245, 47, 87, 0.3);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(245, 47, 87, 0.2);
+        }
+
+        .nav-item.active {
+            background: rgba(245, 47, 87, 0.15);
+            border-color: var(--folly);
+            box-shadow: 0 0 20px rgba(245, 47, 87, 0.3);
+            color: var(--madder);
+            font-weight: 600;
+        }
+
+        /* Main content adjustment */
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Mobile responsive */
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+
+        .main-content.full-width {
+            margin-left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar.hidden {
+                transform: translateX(-100%);
+            }
+        }
+
         /* Clases de resaltado para el texto */
         .text-highlight-1 {
             color: var(--folly);
@@ -114,8 +214,42 @@
 </head>
 <body class=""> <!-- Clases de Tailwind eliminadas, controladas por CSS -->
 
-    <!-- Contenedor principal -->
-    <div class="container mx-auto max-w-4xl p-6 md:p-12">
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <h3>🚀 FastAPI Depends</h3>
+        
+        <a href="#introduccion" class="nav-item" onclick="setActive(this)">
+            📖 Introducción
+        </a>
+        
+        <a href="#use-cache" class="nav-item" onclick="setActive(this)">
+            🔄 use_cache=True
+        </a>
+        
+        <a href="#yield" class="nav-item" onclick="setActive(this)">
+            💾 Gestión con yield
+        </a>
+        
+        <a href="#clases" class="nav-item" onclick="setActive(this)">
+            🏗️ Clases como Dependencias
+        </a>
+        
+        <a href="#decorador" class="nav-item" onclick="setActive(this)">
+            🎨 dependencies en Decorador
+        </a>
+        
+        <a href="#testing" class="nav-item" onclick="setActive(this)">
+            🧪 Testing y Overrides
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Contenedor principal -->
+        <div class="container mx-auto max-w-4xl p-6 md:p-12">
 
         <!-- Cabecera -->
         <header class="text-center mb-16">
@@ -130,7 +264,7 @@
         <main class="space-y-12">
 
             <!-- Introducción -->
-            <section class="content-card p-6 md:p-8">
+            <section id="introduccion" class="content-card p-6 md:p-8">
                 <h2 class="text-3xl font-bold mb-4">Introducción</h2> <!-- Clase de color de Tailwind eliminada -->
                 <p class="text-lg leading-relaxed">
                     Ya sabes que <code>Depends</code> es el corazón del sistema de inyección de dependencias de FastAPI. Es lo que nos permite tener bases de datos, autenticación y configuraciones de forma limpia.
@@ -141,7 +275,7 @@
             </section>
 
             <!-- 1. El Secreto de `use_cache=True` (y cuándo usar `False`) -->
-            <section class="content-card p-6 md:p-8">
+            <section id="use-cache" class="content-card p-6 md:p-8">
                 <h2 class="text-3xl font-bold mb-4">1. El Secreto de <code>use_cache=True</code></h2> <!-- Clase de color de Tailwind eliminada -->
                 <p class="text-lg leading-relaxed mb-4">
                     Por defecto, FastAPI cachea el resultado de una dependencia <strong class="text-highlight-2">dentro del mismo request</strong>. Si múltiples dependencias en la misma cadena de llamadas dependen de <code>get_db</code>, FastAPI solo la ejecutará una vez.
@@ -184,7 +318,7 @@ async def cache_demo(
             </section>
             
             <!-- 2. Gestión Avanzada de Recursos con `yield` -->
-            <section class="content-card p-6 md:p-8">
+            <section id="yield" class="content-card p-6 md:p-8">
                 <h2 class="text-3xl font-bold mb-4">2. Gestión Avanzada de Recursos con <code>yield</code></h2> <!-- Clase de color de Tailwind eliminada -->
                 <p class="text-lg leading-relaxed mb-4">
                     El patrón <code>yield</code> es la forma canónica de manejar recursos que necesitan limpieza (setup y teardown), como sesiones de base de datos o conexiones a servicios externos.
@@ -249,7 +383,7 @@ async def safe_transaction(item_id: int, db: Session = Depends(get_db)):
             </section>
 
             <!-- 3. Clases como Dependencias (Avanzado) -->
-            <section class="content-card p-6 md:p-8">
+            <section id="clases" class="content-card p-6 md:p-8">
                 <h2 class="text-3xl font-bold mb-4">3. Clases como Dependencias (Avanzado)</h2> <!-- Clase de color de Tailwind eliminada -->
                 <p class="text-lg leading-relaxed mb-4">
                     Usar una clase como dependencia es un patrón increíblemente poderoso para agrupar lógica de negocio o parámetros complejos. FastAPI inyecta dependencias en el <code>__init__</code> de la clase.
@@ -328,7 +462,7 @@ async def create_item(editor: User = Depends(check_read_write)):
             </section>
             
             <!-- 4. Dependencias en el Decorador vs. en la Firma -->
-            <section class="content-card p-6 md:p-8">
+            <section id="decorador" class="content-card p-6 md:p-8">
                 <h2 class="text-3xl font-bold mb-4">4. <code>dependencies</code> en el Decorador</h2> <!-- Clase de color de Tailwind eliminada -->
                 <p class="text-lg leading-relaxed mb-4">
                     Ya conoces las dependencias en la firma de la función (ej. <code>db: Session = Depends(get_db)</code>), que <strong class="text-highlight-2">inyectan un valor</strong> en tu función.
@@ -381,7 +515,7 @@ async def get_sensitive_data():
             </section>
             
             <!-- 5. Testing y `dependency_overrides` -->
-            <section class="content-card p-6 md:p-8">
+            <section id="testing" class="content-card p-6 md:p-8">
                 <h2 class="text-3xl font-bold mb-4">5. Testing y <code>dependency_overrides</code></h2> <!-- Clase de color de Tailwind eliminada -->
                 <p class="text-lg leading-relaxed mb-4">
                     La verdadera magia de la Inyección de Dependencias se revela en el testing. El sistema <code>Depends</code> está diseñado para ser <strong class="text-highlight-2">sobrescrito</strong> (overridden) durante las pruebas.
@@ -459,10 +593,54 @@ app.dependency_overrides = {}
         </footer>
 
     </div>
+    </div> <!-- Close main-content -->
 
     <!-- Script para inicializar highlight.js -->
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
+        // Toggle sidebar visibility
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            
+            sidebar.classList.toggle('hidden');
+            mainContent.classList.toggle('full-width');
+            toggleBtn.classList.toggle('sidebar-open');
+        }
+
+        // Set active navigation item
+        function setActive(element) {
+            // Remove active class from all items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Add active class to clicked element
+            element.classList.add('active');
+        }
+
+        // Smooth scrolling for navigation links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Set first nav-item as active on page load
+            const firstNavItem = document.querySelector('.nav-item');
+            if (firstNavItem) {
+                firstNavItem.classList.add('active');
+            }
+            
+            // Initialize highlight.js
             hljs.highlightAll();
         });
     </script>
