@@ -421,6 +421,12 @@
       <a href="#websocket-example" class="nav-subitem" onclick="setActive(this)">
         🌐 WebSockets
       </a>
+      
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12);">
+        <a href="api_quiz.html" class="nav-item" onclick="setActive(this)">
+          🎯 Take API Quiz
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -479,6 +485,17 @@ async def main():
         print(await ws.recv())
 asyncio.run(main())</code></pre>
 
+    </section>
+    
+    <!-- Quiz Call-to-Action -->
+    <section style="text-align: center; margin-top: 40px;">
+      <h2>🎯 Test Your Knowledge!</h2>
+      <p style="margin-bottom: 20px; color: #94a3b8;">Ready to test what you've learned about APIs?</p>
+      <a href="api_quiz.html" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; text-decoration: none; padding: 15px 30px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(124,58,237,0.4);" 
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(124,58,237,0.6)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(124,58,237,0.4)'">
+        🚀 Take the API Quiz
+      </a>
     </section>
     </div>
   </div>

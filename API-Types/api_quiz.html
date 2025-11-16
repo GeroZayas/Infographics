@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Quiz - Test Your Knowledge</title>
+<style>
+  /* Sidebar Styles */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: rgba(17, 25, 40, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255,255,255,0.12);
+    padding: 30px 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: rgba(124,58,237,0.8);
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+  }
+
+  .sidebar-toggle:hover {
+    background: rgba(124,58,237,1);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(124,58,237,0.6);
+  }
+
+  .sidebar h3 {
+    color: #a78bfa;
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(167,139,250,0.5);
+  }
+
+  .nav-item {
+    display: block;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-item:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(96,165,250,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .nav-item:hover:before {
+    left: 100%;
+  }
+
+  .nav-item:hover {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.3);
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(96,165,250,0.2);
+  }
+
+  .nav-item.active {
+    background: rgba(124,58,237,0.25);
+    border-color: rgba(124,58,237,0.5);
+    box-shadow: 0 0 20px rgba(124,58,237,0.3);
+  }
+
+  /* Main content adjustment */
+  .main-content {
+    margin-left: 280px;
+    transition: margin-left 0.3s ease;
+  }
+
+  /* Mobile responsive */
+  .sidebar.hidden {
+    transform: translateX(-100%);
+  }
+
+  .main-content.full-width {
+    margin-left: 0;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 250px;
+    }
+    .main-content {
+      margin-left: 0;
+    }
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+  }
+
+  body {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0a0f1f, #111827, #1e1b4b);
+    color: #e5e7eb;
+    background-attachment: fixed;
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 50px auto;
+    background: rgba(17, 25, 40, 0.75);
+    padding: 50px;
+    border-radius: 28px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 120px rgba(88,80,200,0.25);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #22d3ee);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(96,165,250,0.45);
+    margin-bottom: 25px;
+  }
+
+  .quiz-container {
+    background: rgba(255,255,255,0.05);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: inset 0 0 25px rgba(255,255,255,0.03), 0 0 15px rgba(88,80,200,0.15);
+    margin-bottom: 30px;
+  }
+
+  .question {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    color: #f1f5f9;
+    font-weight: 600;
+  }
+
+  .options {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .option {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    padding: 18px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    color: #e2e8f0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(96,165,250,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .option:hover:before {
+    left: 100%;
+  }
+
+  .option:hover {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.4);
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(96,165,250,0.2);
+  }
+
+  .option.selected {
+    background: rgba(124,58,237,0.25);
+    border-color: rgba(124,58,237,0.5);
+    box-shadow: 0 0 20px rgba(124,58,237,0.3);
+  }
+
+  .option.correct {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+  }
+
+  .option.incorrect {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+
+  .quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(124,58,237,0.6);
+  }
+
+  .btn:disabled {
+    background: rgba(107, 114, 128, 0.5);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .score {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #60a5fa;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #22d3ee);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .result-container {
+    text-align: center;
+    padding: 40px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-top: 30px;
+  }
+
+  .result-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #22d3ee);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .result-score {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #60a5fa;
+  }
+
+  .result-message {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #e2e8f0;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .quiz-info {
+    background: rgba(96,165,250,0.1);
+    border: 1px solid rgba(96,165,250,0.3);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .quiz-info h3 {
+    color: #60a5fa;
+    margin-bottom: 10px;
+  }
+
+  .quiz-info p {
+    color: #cbd5e1;
+    margin: 5px 0;
+  }
+</style>
+</head>
+<body>
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <h3>🎮 Quiz Navigation</h3>
+    
+    <a href="#" class="nav-item" onclick="restartQuiz()">
+      🔄 Restart Quiz
+    </a>
+    
+    <a href="#" class="nav-item" onclick="showResults()">
+      📊 View Results
+    </a>
+    
+    <a href="api_infografia_web.html" class="nav-item">
+      📖 Back to API Info
+    </a>
+    
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12);">
+      <h4 style="color: #a78bfa; margin-bottom: 15px; font-size: 1.1rem;">📚 Quiz Topics</h4>
+      <div style="color: #94a3b8; font-size: 0.9rem; line-height: 1.6;">
+        <div style="margin-bottom: 8px;">• API Basics</div>
+        <div style="margin-bottom: 8px;">• REST APIs</div>
+        <div style="margin-bottom: 8px;">• GraphQL</div>
+        <div style="margin-bottom: 8px;">• SOAP</div>
+        <div style="margin-bottom: 8px;">• Webhooks</div>
+        <div style="margin-bottom: 8px;">• WebSockets</div>
+        <div style="margin-bottom: 8px;">• Python Examples</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+      <h1>🎯 API Knowledge Quiz</h1>
+      
+      <div class="quiz-info">
+        <h3>Test Your API Knowledge!</h3>
+        <p>Answer questions about different API types and their usage</p>
+        <p>Based on the API Cheat-Card content</p>
+      </div>
+
+      <div id="quiz-content">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        
+        <div class="score" id="score">Question 1 of 10</div>
+        
+        <div class="quiz-container fade-in">
+          <div class="question" id="question"></div>
+          <div class="options" id="options"></div>
+          
+          <div class="quiz-controls">
+            <button class="btn" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+            <button class="btn" id="submit-btn" onclick="submitAnswer()">Submit Answer</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="result-container" class="result-container hidden">
+        <div class="result-title">🎉 Quiz Complete!</div>
+        <div class="result-score" id="final-score"></div>
+        <div class="result-message" id="result-message"></div>
+        <button class="btn" onclick="restartQuiz()">Take Quiz Again</button>
+        <button class="btn" onclick="window.location.href='api_infografia_web.html'">Back to API Info</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const quizQuestions = [
+      {
+        question: "¿Qué es una API?",
+        options: [
+          "Un lenguaje de programación",
+          "Un mensajero digital entre tu app y un servidor",
+          "Una base de datos",
+          "Un sistema operativo"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿Cuál es la característica principal de REST APIs?",
+        options: [
+          "Usa XML exclusivamente",
+          "URLs como /users/3, simple y universal",
+          "Requiere conexión permanente",
+          "Solo funciona con JavaScript"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿Qué permite GraphQL que las otras APIs no hacen?",
+        options: [
+          "Conexión en tiempo real",
+          "Pedir exactamente lo que necesitas en un solo endpoint",
+          "Enviar eventos automáticamente",
+          "Funcionar sin internet"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿Qué tipo de API usa XML y es muy formal?",
+        options: [
+          "REST",
+          "GraphQL",
+          "SOAP",
+          "WebSocket"
+        ],
+        correct: 2
+      },
+      {
+        question: "¿Cómo funcionan los Webhooks?",
+        options: [
+          "El cliente pide datos constantemente",
+          "El servidor envía eventos cuando ocurren",
+          "Usan URLs complejas",
+          "Solo funcionan con Python"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿Para qué se usan principalmente los WebSockets?",
+        options: [
+          "Para descargar archivos grandes",
+          "Para comunicación en tiempo real",
+          "Para almacenar datos",
+          "Para autenticación"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿Qué librería Python se usa comúnmente para REST APIs?",
+        options: [
+          "zeep",
+          "websockets",
+          "requests",
+          "fastapi"
+        ],
+        correct: 2
+      },
+      {
+        question: "¿Qué librería se usa para SOAP en Python?",
+        options: [
+          "requests",
+          "zeep",
+          "websockets",
+          "flask"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿En qué escenario usarías un Webhook?",
+        options: [
+          "Para obtener datos de un usuario",
+          "Para recibir notificaciones de pagos",
+          "Para subir archivos",
+          "Para hacer cálculos matemáticos"
+        ],
+        correct: 1
+      },
+      {
+        question: "¿Qué método HTTP se usa comúnmente para obtener datos en REST?",
+        options: [
+          "POST",
+          "PUT",
+          "DELETE",
+          "GET"
+        ],
+        correct: 3
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answers = [];
+    let selectedOption = null;
+
+    function loadQuestion() {
+      const question = quizQuestions[currentQuestion];
+      document.getElementById('question').textContent = question.question;
+      
+      const optionsContainer = document.getElementById('options');
+      optionsContainer.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        optionDiv.textContent = option;
+        optionDiv.onclick = () => selectOption(index);
+        optionsContainer.appendChild(optionDiv);
+      });
+      
+      updateScore();
+      updateButtons();
+      updateProgress();
+      
+      // Reset selected option
+      selectedOption = null;
+      document.getElementById('submit-btn').disabled = true;
+      
+      // Add fade-in animation
+      document.querySelector('.quiz-container').classList.add('fade-in');
+    }
+
+    function selectOption(index) {
+      // Remove previous selection
+      document.querySelectorAll('.option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selection to clicked option
+      document.querySelectorAll('.option')[index].classList.add('selected');
+      selectedOption = index;
+      document.getElementById('submit-btn').disabled = false;
+    }
+
+    function submitAnswer() {
+      if (selectedOption === null) return;
+      
+      const question = quizQuestions[currentQuestion];
+      const options = document.querySelectorAll('.option');
+      
+      // Show correct/incorrect
+      options[selectedOption].classList.add(
+        selectedOption === question.correct ? 'correct' : 'incorrect'
+      );
+      
+      if (selectedOption === question.correct) {
+        score++;
+      }
+      
+      answers[currentQuestion] = selectedOption;
+      
+      // Disable options and submit button
+      options.forEach(option => {
+        option.style.pointerEvents = 'none';
+      });
+      document.getElementById('submit-btn').disabled = true;
+      
+      // Enable next button or show results
+      if (currentQuestion < quizQuestions.length - 1) {
+        document.getElementById('next-btn').disabled = false;
+      } else {
+        setTimeout(showResults, 1500);
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < quizQuestions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+      }
+    }
+
+    function previousQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+      }
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+    }
+
+    function updateButtons() {
+      document.getElementById('prev-btn').disabled = currentQuestion === 0;
+      document.getElementById('next-btn').disabled = currentQuestion === quizQuestions.length - 1;
+    }
+
+    function updateProgress() {
+      const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+      document.getElementById('progress-fill').style.width = progress + '%';
+    }
+
+    function showResults() {
+      const percentage = Math.round((score / quizQuestions.length) * 100);
+      document.getElementById('quiz-content').classList.add('hidden');
+      document.getElementById('result-container').classList.remove('hidden');
+      document.getElementById('final-score').textContent = `${score}/${quizQuestions.length}`;
+      
+      let message = '';
+      if (percentage >= 90) {
+        message = '🏆 Excellent! You\'re an API expert!';
+      } else if (percentage >= 70) {
+        message = '🎉 Great job! You know your APIs well!';
+      } else if (percentage >= 50) {
+        message = '👍 Good effort! Keep learning about APIs!';
+      } else {
+        message = '📚 Keep studying! APIs are powerful tools!';
+      }
+      
+      document.getElementById('result-message').textContent = message;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      answers = [];
+      selectedOption = null;
+      
+      document.getElementById('quiz-content').classList.remove('hidden');
+      document.getElementById('result-container').classList.add('hidden');
+      
+      loadQuestion();
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.querySelector('.main-content');
+      sidebar.classList.toggle('hidden');
+      mainContent.classList.toggle('full-width');
+    }
+
+    // Initialize quiz
+    document.addEventListener('DOMContentLoaded', () => {
+      loadQuestion();
+    });
+  </script>
+</body>
+</html>
