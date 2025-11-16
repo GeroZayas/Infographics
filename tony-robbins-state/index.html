@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live in a Beautiful State — Infographic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --muted: #9aa4b2;
+      --text: #e5e7eb;
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --ok: #10b981;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --ring: rgba(124,58,237,.35);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 10% -10%, rgba(124,58,237,.15), transparent 60%),
+                  radial-gradient(1000px 600px at 120% 10%, rgba(6,182,212,.12), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px; }
+    .title {
+      display: grid; gap: 14px; padding: 28px; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(124,58,237,.14), rgba(6,182,212,.14));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(124,58,237,.25);
+    }
+    .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--muted); }
+    h1 { margin: 0; font-size: clamp(28px, 6vw, 44px); line-height: 1.05; }
+    .subtitle { color: var(--muted); font-size: 14px; }
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); margin-top: 22px; }
+    .card {
+      grid-column: span 12;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--card);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 18px; padding: 18px; box-shadow: var(--shadow);
+    }
+    @media (min-width: 800px) {
+      .span-4 { grid-column: span 4; }
+      .span-6 { grid-column: span 6; }
+      .span-8 { grid-column: span 8; }
+    }
+    .card h2 { margin: 0 0 10px 0; font-size: 18px; letter-spacing: .02em; }
+    .muted { color: var(--muted); }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 10px; }
+    .kpi { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); padding: 12px; border-radius: 14px; min-width: 0; }
+    .kpi .muted { overflow-wrap: anywhere; }
+    .kpi b { font-size: 20px; display: block; }
+
+    .list { display: grid; gap: 8px; margin: 10px 0 0; }
+    .li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; }
+    .badge { height: 24px; width: 24px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.35); }
+
+    .pill { display:inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); margin: 4px 6px 0 0; }
+
+    .quote { font-size: 14px; border-left: 3px solid var(--accent); padding-left: 12px; margin: 8px 0 0; color: #d9d9ff; }
+
+    .flow { display: grid; gap: 10px; margin-top: 6px; }
+    .step { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+    .step .num { height: 28px; width: 28px; border-radius: 50%; display:grid; place-items:center; font-weight: 800; font-size: 12px; color:#0b0f19; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 6px 18px var(--ring); }
+
+    .tagbar { margin-top: 6px; }
+
+    .footer { margin-top: 22px; font-size: 12px; color: var(--muted); display:flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* Print */
+    @media print { body { background: #fff; color: #111; } .title, .card { box-shadow: none; } .title { border: 1px solid #ddd; } .card { border: 1px solid #eee; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="title">
+      <div class="eyebrow">Infographic</div>
+      <h1>Live in a Beautiful State</h1>
+      <div class="subtitle">Insights distilled from an interview with <strong>Tony Robbins</strong> on choosing happiness, ending suffering fast, and a simple healing practice.</div>
+      <div class="kpis">
+        <div class="kpi"><b class="mono">90s</b><div class="muted">Rule to end suffering loops</div></div>
+        <div class="kpi"><b class="mono">4 words</b><div class="muted">Core ho’oponopono mantra</div></div>
+        <div class="kpi"><b class="mono">100%</b><div class="muted">Responsibility for your state</div></div>
+      </div>
+    </header>
+
+    <section class="grid">
+      <article class="card span-6">
+        <h2>Core Decision</h2>
+        <p class="muted">Draw a line in the sand: decide to be happy <em>no matter what</em>. Life won’t match your blueprint; your <strong>state</strong> drives your outcomes.</p>
+        <p class="quote">“Burn your boats.” Remove the escape hatch back to suffering.</p>
+        <div class="tagbar">
+          <span class="pill">Agency</span>
+          <span class="pill">Clarity</span>
+          <span class="pill">Non‑negotiable</span>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <h2>90‑Second Rule</h2>
+        <p class="muted">Notice suffering → interrupt it in ~90 seconds. Repetition lowers your tolerance for suffering and raises your baseline for joy.</p>
+        <div class="flow">
+          <div class="step"><div class="num">1</div><div><strong>Catch it.</strong> Label the state: fear, anger, shame, rumination.</div></div>
+          <div class="step"><div class="num">2</div><div><strong>Break it.</strong> Change <em>physiology</em> (posture, breath), <em>focus</em>, and <em>language</em>.</div></div>
+          <div class="step"><div class="num">3</div><div><strong>Replace it.</strong> Appreciate, love, or give—immediately.</div></div>
+        </div>
+      </article>
+
+      <article class="card span-8">
+        <h2>Ho’oponopono (Reset to “Zero”)</h2>
+        <p class="muted">A simple Hawaiian practice used for deep healing and relational “zeroing out.” Repeat slowly, from the heart:</p>
+        <div class="list">
+          <div class="li"><div class="badge">1</div><div><strong>“I’m sorry.”</strong> Acknowledge shared responsibility for the human experience.</div></div>
+          <div class="li"><div class="badge">2</div><div><strong>“Please forgive me.”</strong> Release stuck stories and blame.</div></div>
+          <div class="li"><div class="badge">3</div><div><strong>“I love you.”</strong> Let love pierce defenses and soothe the nervous system.</div></div>
+          <div class="li"><div class="badge">4</div><div><strong>“Thank you.”</strong> Close with gratitude; repeat as needed. Many condense to “I love you, thank you.”</div></div>
+        </div>
+        <p class="muted" style="margin-top:8px">Use alone, with a partner, or toward someone you’re struggling with. Aim: return to presence before conditioning and narrative.</p>
+      </article>
+
+      <article class="card span-4">
+        <h2>Operating Principles</h2>
+        <div class="list">
+          <div class="li"><div class="badge">A</div><div><strong>100% Responsibility.</strong> You fully own your inner experience.</div></div>
+          <div class="li"><div class="badge">B</div><div><strong>State First.</strong> Solutions surface faster from a beautiful state.</div></div>
+          <div class="li"><div class="badge">C</div><div><strong>Simplicity Wins.</strong> One idea <em>applied</em> beats many ideas “shelved.”</div></div>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <h2>Protocol: 3‑Minute State Shift</h2>
+        <div class="flow">
+          <div class="step"><div class="num">1</div><div><strong>Physiology (45s).</strong> Stand tall, inhale 4s, hold 4s, exhale 6–8s. Shake out tension.</div></div>
+          <div class="step"><div class="num">2</div><div><strong>Focus (45s).</strong> Ask: <em>What’s something I can appreciate right now?</em></div></div>
+          <div class="step"><div class="num">3</div><div><strong>Meaning (45s).</strong> Ask: <em>What could this mean that empowers me?</em></div></div>
+          <div class="step"><div class="num">4</div><div><strong>Give (45s).</strong> Send a message of love or help someone—tiny act, big state change.</div></div>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <h2>Prompts to Rewire</h2>
+        <div class="list">
+          <div class="li"><div class="badge">?</div><div><strong>What’s great about this or what can I learn?</strong></div></div>
+          <div class="li"><div class="badge">?</div><div><strong>If I were already at peace, what would I do next?</strong></div></div>
+          <div class="li"><div class="badge">?</div><div><strong>Where can I appreciate, love, or give—right now?</strong></div></div>
+        </div>
+        <p class="quote">Practice daily; repetition makes suffering feel increasingly foreign.</p>
+      </article>
+
+      <article class="card span-12">
+        <h2>Minute‑One Cheatsheet</h2>
+        <div class="tagbar">
+          <span class="pill">Name it → “Suffering.”</span>
+          <span class="pill">Change breath + posture.</span>
+          <span class="pill">Ask 1 better question.</span>
+          <span class="pill">Ho’oponopono × 3 cycles.</span>
+          <span class="pill">Do 1 generous act.</span>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div>Made for printing & screens. Export to PDF via your browser.</div>
+      <div>Source: Interview with Tony Robbins on living in a “beautiful state.”</div>
+    </footer>
+  </div>
+</body>
+</html>

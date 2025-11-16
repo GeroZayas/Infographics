@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Avanzada de FastAPI Depends</title>
+    
+    <!-- Tailwind CSS para el layout y la base moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- highlight.js para el resaltado de código -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Paleta de colores personalizada */
+        :root {
+            --madder: #a20021ff;
+            --folly: #f52f57ff;
+            --sandy-brown: #f79d5cff;
+            --pumpkin: #f3752bff;
+            --ghost-white: #ededf4ff;
+        }
+
+        /* Estilos personalizados para el look & feel moderno */
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ghost-white); /* Fondo claro (nuevo) */
+            color: #1a1a1a; /* Texto oscuro (nuevo) */
+            overflow-x: hidden;
+            /* Animación sutil de entrada */
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        /* Título principal con gradiente y animación de pulso (NUEVA PALETA) */
+        .header-title {
+            background: linear-gradient(90deg, var(--madder), var(--folly), var(--pumpkin));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientPulse 8s ease infinite;
+        }
+
+        @keyframes gradientPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Tarjeta de contenido con diseño plano y moderno (SIN GLOW) */
+        .content-card {
+            background: #ffffff; /* Fondo blanco */
+            border-radius: 20px;
+            border: 1px solid #e0e0e0; /* Borde sutil */
+            /* Sombra moderna y sutil (reemplaza el glow) */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
+                        0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* Animación sutil al hacer hover (actualizada) */
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.07),
+                        0 12px 15px -6px rgba(0, 0, 0, 0.07);
+        }
+
+        /* Estilo para los bloques de código (Mantenemos tema oscuro para el código) */
+        pre {
+            background-color: #282c34; /* Fondo oscuro de Atom One Dark */
+            border-radius: 12px;
+            border: 1px solid #444;
+            /* Se elimina el 'box-shadow' inset para un look más plano */
+            box-shadow: none;
+        }
+
+        /* Personalización de la barra de scroll (Tema claro) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b0b0b0;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--folly); /* Color de acento al hacer hover */
+        }
+
+        /* Títulos de sección con la nueva paleta */
+        section h2 {
+            color: var(--madder);
+        }
+
+        /* Clases de resaltado para el texto */
+        .text-highlight-1 {
+            color: var(--folly);
+            font-weight: 700;
+        }
+        .text-highlight-2 {
+            color: var(--pumpkin);
+            font-weight: 700;
+        }
+        
+    </style>
+</head>
+<body class=""> <!-- Clases de Tailwind eliminadas, controladas por CSS -->
+
+    <!-- Contenedor principal -->
+    <div class="container mx-auto max-w-4xl p-6 md:p-12">
+
+        <!-- Cabecera -->
+        <header class="text-center mb-16">
+            <h1 class="header-title text-5xl md:text-7xl font-black mb-4">
+                FastAPI <code>Depends</code>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-700"> <!-- Texto más oscuro -->
+                Patrones Avanzados y Mejores Prácticas
+            </p>
+        </header>
+
+        <main class="space-y-12">
+
+            <!-- Introducción -->
+            <section class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">Introducción</h2> <!-- Clase de color de Tailwind eliminada -->
+                <p class="text-lg leading-relaxed">
+                    Ya sabes que <code>Depends</code> es el corazón del sistema de inyección de dependencias de FastAPI. Es lo que nos permite tener bases de datos, autenticación y configuraciones de forma limpia.
+                </p>
+                <p class="text-lg leading-relaxed mt-4">
+                    Pero <code>Depends</code> es mucho más que obtener una sesión de base de datos. Vamos a explorar los patrones avanzados que separan una API funcional de una API robusta, mantenible y testeable.
+                </p>
+            </section>
+
+            <!-- 1. El Secreto de `use_cache=True` (y cuándo usar `False`) -->
+            <section class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">1. El Secreto de <code>use_cache=True</code></h2> <!-- Clase de color de Tailwind eliminada -->
+                <p class="text-lg leading-relaxed mb-4">
+                    Por defecto, FastAPI cachea el resultado de una dependencia <strong class="text-highlight-2">dentro del mismo request</strong>. Si múltiples dependencias en la misma cadena de llamadas dependen de <code>get_db</code>, FastAPI solo la ejecutará una vez.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    Esto es casi siempre lo que quieres. Pero, ¿y si no? El parámetro <code>use_cache=False</code> fuerza a FastAPI a re-ejecutar la dependencia cada vez que es llamada, incluso dentro del mismo request.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    <strong class="text-highlight-1">Caso de uso avanzado:</strong> Necesitas un objeto de transacción de base de datos completamente nuevo y aislado para una parte específica de tu lógica, separado de la sesión principal.
+                </p>
+<pre><code class="python">
+from fastapi import FastAPI, Depends
+
+app = FastAPI()
+
+def get_fresh_transaction_id() -> str:
+    # Imagina que esto genera un ID de transacción único
+    import time
+    return f"tx-{int(time.time_ns())}"
+
+# Esta dependencia se ejecutará CADA VEZ que se inyecte
+def get_new_tx_id(tx_id: str = Depends(get_fresh_transaction_id, use_cache=False)):
+    return tx_id
+
+# Esta dependencia se cacheará (comportamiento normal)
+def get_cached_tx_id(tx_id: str = Depends(get_fresh_transaction_id, use_cache=True)):
+    return tx_id
+
+@app.get("/cache-demo")
+async def cache_demo(
+    tx1: str = Depends(get_new_tx_id),      # Se ejecuta get_fresh_transaction_id
+    tx2: str = Depends(get_new_tx_id),      # Se ejecuta OTRA VEZ
+    tx3: str = Depends(get_cached_tx_id),   # Se ejecuta get_fresh_transaction_id
+    tx4: str = Depends(get_cached_tx_id)    # USA EL VALOR CACHEADO de tx3
+):
+    # tx1 y tx2 serán diferentes
+    # tx3 y tx4 serán iguales
+    return {"tx1": tx1, "tx2": tx2, "tx3": tx3, "tx4": tx4}
+</code></pre>
+            </section>
+            
+            <!-- 2. Gestión Avanzada de Recursos con `yield` -->
+            <section class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">2. Gestión Avanzada de Recursos con <code>yield</code></h2> <!-- Clase de color de Tailwind eliminada -->
+                <p class="text-lg leading-relaxed mb-4">
+                    El patrón <code>yield</code> es la forma canónica de manejar recursos que necesitan limpieza (setup y teardown), como sesiones de base de datos o conexiones a servicios externos.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    El código <strong class="text-highlight-2">antes</strong> de <code>yield</code> se ejecuta antes de pasar el control al *path operation*. El código <strong class="text-highlight-2">después</strong> de <code>yield</code> (usualmente en un bloque <code>finally</code>) se ejecuta *después* de que el *path operation* ha terminado, incluso si ha fallado.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    <strong class="text-highlight-2">Mejor práctica:</strong> Usa esto para hacer <code>commit</code> o <code>rollback</code> de transacciones de base de datos automáticamente.
+                </p>
+<pre><code class="python">
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+# Asume que db_session, Base, engine están definidos en alguna parte
+# from .database import SessionLocal
+
+# Simulación de la sesión de DB
+class DBSession:
+    def __init__(self): self.commited = False; self.rolled_back = False
+    def commit(self): self.commited = True
+    def rollback(self): self.rolled_back = True
+    def close(self): pass
+
+def get_db():
+    db = DBSession() # db = SessionLocal()
+    print("Abriendo conexión a la base de datos")
+    try:
+        yield db
+        # Si el path operation termina sin excepción, hacemos commit.
+        db.commit()
+        print("Haciendo COMMIT")
+    except HTTPException as e:
+        # Si es una excepción HTTP, la relanzamos
+        # (El cliente causó el error, no la lógica de negocio)
+        db.rollback()
+        print("Haciendo ROLLBACK por HTTPException")
+        raise e
+    except Exception as e:
+        # Si es cualquier otra excepción (ej. error 500), hacemos rollback.
+        db.rollback()
+        print(f"Haciendo ROLLBACK por error interno: {e}")
+        # Opcionalmente, relanza el error para que FastAPI lo maneje
+        raise e
+    finally:
+        # El bloque finally se ejecuta SIEMPRE.
+        db.close()
+        print("Cerrando conexión a la base de datos")
+
+@app.get("/safe-transaction/{item_id}")
+async def safe_transaction(item_id: int, db: Session = Depends(get_db)):
+    if item_id == 1:
+        # Esto funcionará y hará COMMIT
+        return {"message": "Éxito, se hará commit"}
+    if item_id == 2:
+        # Esto fallará y hará ROLLBACK (error del cliente)
+        raise HTTPException(status_code=404, detail="Item no encontrado")
+    if item_id == 3:
+        # Esto fallará y hará ROLLBACK (error del servidor)
+        result = 10 / 0 
+        return {}
+</code></pre>
+            </section>
+
+            <!-- 3. Clases como Dependencias (Avanzado) -->
+            <section class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">3. Clases como Dependencias (Avanzado)</h2> <!-- Clase de color de Tailwind eliminada -->
+                <p class="text-lg leading-relaxed mb-4">
+                    Usar una clase como dependencia es un patrón increíblemente poderoso para agrupar lógica de negocio o parámetros complejos. FastAPI inyecta dependencias en el <code>__init__</code> de la clase.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    <strong class="text-highlight-2">Patrón avanzado:</strong> Puedes hacer que tu clase sea un <strong class="text-highlight-2">"callable"</strong> (implementando <code>__call__</code>) para crear dependencias configurables y reutilizables.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    <strong class="text-green-300">Patrón avanzado:</strong> Puedes hacer que tu clase sea un <strong class="text-yellow-300">"callable"</strong> (implementando <code>__call__</code>) para crear dependencias configurables y reutilizables.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    Aquí, creamos un verificador de permisos que *se configura* en <code>__init__</code> y *se ejecuta* en <code>__call__</code>.
+                </p>
+<pre><code class="python">
+from fastapi import FastAPI, Depends, HTTPException, Security
+from typing import List, Optional
+
+# Simulación de un usuario y un token
+class User:
+    def __init__(self, username: str, scopes: List[str]):
+        self.username = username
+        self.scopes = scopes
+
+# Dependencia simple que obtiene el usuario (simulada)
+async def get_current_user(token: Optional[str] = Security(None)) -> User:
+    # En una app real, decodificarías el token JWT
+    if token == "admin_token":
+        return User(username="admin", scopes=["read", "write", "admin"])
+    if token == "user_token":
+        return User(username="user", scopes=["read"])
+    raise HTTPException(status_code=401, detail="No autenticado")
+
+# --- La Clase de Dependencia Avanzada ---
+
+class PermissionChecker:
+    """
+    Esta clase se instancia con los permisos REQUERIDOS.
+    FastAPI no la llamará directamente.
+    """
+    def __init__(self, required_scopes: List[str]):
+        self.required_scopes = required_scopes
+        print(f"Checker configurado para requerir: {required_scopes}")
+
+    """
+    FastAPI llamará a este método porque `Depends`
+    apuntará a una *instancia* de esta clase.
+    """
+    async def __call__(self, user: User = Depends(get_current_user)):
+        print(f"Revisando scopes... Requeridos: {self.required_scopes}, Usuario tiene: {user.scopes}")
+        for scope in self.required_scopes:
+            if scope not in user.scopes:
+                raise HTTPException(
+                    status_code=403,
+                    detail=f"Permiso insuficiente. Se requiere: '{scope}'"
+                )
+        return user # Opcionalmente, devuelve el usuario verificado
+
+# --- Instanciamos nuestras dependencias configurables ---
+# Nota: NO usamos Depends() aquí.
+# Estamos creando las instancias que SERÁN las dependencias.
+check_admin = PermissionChecker(required_scopes=["admin"])
+check_read_write = PermissionChecker(required_scopes=["read", "write"])
+
+# --- Uso ---
+@app.get("/admin/dashboard")
+async def get_admin_dashboard(admin_user: User = Depends(check_admin)):
+    # `check_admin` es una instancia, FastAPI llama a `check_admin.__call__()`
+    # `__call__` a su vez depende de `get_current_user`
+    return {"message": f"Hola admin {admin_user.username}"}
+
+@app.post("/items")
+async def create_item(editor: User = Depends(check_read_write)):
+    # `check_read_write` es otra instancia con diferente configuración
+    return {"message": f"Item creado por {editor.username}"}
+</code></pre>
+            </section>
+            
+            <!-- 4. Dependencias en el Decorador vs. en la Firma -->
+            <section class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">4. <code>dependencies</code> en el Decorador</h2> <!-- Clase de color de Tailwind eliminada -->
+                <p class="text-lg leading-relaxed mb-4">
+                    Ya conoces las dependencias en la firma de la función (ej. <code>db: Session = Depends(get_db)</code>), que <strong class="text-highlight-2">inyectan un valor</strong> en tu función.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    en el decorador de la operación (<code>@app.get</code>, <code>@app.post</code>, etc.).
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    Estas dependencias <strong class="text-highlight-1">se ejecutan, pero su valor de retorno no se pasa a tu función</strong>.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    <strong class="text-highlight-2">Caso de uso:</strong> Perfecto para validaciones de "todo o nada". Por ejemplo, verificar una cabecera <code>X-Api-Key</code> o un permiso que solo debe lanzar un error 403 si falla, pero no necesitas el valor de la API key en tu lógica de negocio.
+                </p>
+<pre><code class="python">
+from fastapi import FastAPI, Depends, HTTPException, Header
+from typing import Optional
+
+app = FastAPI()
+
+# Una dependencia que solo valida.
+# Si tiene éxito, no devuelve nada útil (None).
+# Si falla, lanza una excepción.
+async def verify_api_key(x_api_key: Optional[str] = Header(None)):
+    if x_api_key != "mi-api-key-secreta":
+        raise HTTPException(status_code=401, detail="X-Api-Key inválida o faltante")
+    print("X-Api-Key verificada")
+    return None # El valor de retorno se descarta
+
+async def log_request_metadata(user_agent: Optional[str] = Header(None)):
+    print(f"Request recibido de User-Agent: {user_agent}")
+    return None # El valor de retorno se descarta
+
+# Usamos `dependencies` en el decorador
+@app.get(
+    "/datos-sensibles",
+    dependencies=[
+        Depends(verify_api_key),
+        Depends(log_request_metadata)
+    ]
+)
+async def get_sensitive_data():
+    # Si el código llega aquí, es porque verify_api_key tuvo éxito.
+    # Nota que no tenemos `api_key` o `user_agent` como argumento.
+    # La firma de la función está limpia.
+    return {"data": "información muy secreta"}
+
+# También puedes aplicarlo a un Router entero o a la App
+# app = FastAPI(dependencies=[Depends(verify_api_key)])
+</code></pre>
+            </section>
+            
+            <!-- 5. Testing y `dependency_overrides` -->
+            <section class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">5. Testing y <code>dependency_overrides</code></h2> <!-- Clase de color de Tailwind eliminada -->
+                <p class="text-lg leading-relaxed mb-4">
+                    La verdadera magia de la Inyección de Dependencias se revela en el testing. El sistema <code>Depends</code> está diseñado para ser <strong class="text-highlight-2">sobrescrito</strong> (overridden) durante las pruebas.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    externo) por una versión "mock" o falsa que devuelva datos controlados.
+                </p>
+                <p class="text-lg leading-relaxed mb-4">
+                    <strong class="text-highlight-2">Mejor práctica:</strong> Usa <code>app.dependency_overrides</code> junto con <code>TestClient</code> para crear pruebas unitarias rápidas, aisladas y fiables.
+                </p>
+<pre><code class="python">
+# --- main.py (Tu aplicación) ---
+from fastapi import FastAPI, Depends, HTTPException
+
+app = FastAPI()
+
+class User:
+    def __init__(self, username: str, email: str):
+        self.username = username
+        self.email = email
+
+# Esta es la dependencia de PRODUCCIÓN.
+# En un caso real, buscaría en la BD o en un servicio externo.
+async def get_current_user_from_token(token: str = Header(...)) -> User:
+    print("Llamando a la dependencia de PRODUCCIÓN")
+    if token == "prod_token":
+        return User(username="prod_user", email="prod@example.com")
+    raise HTTPException(status_code=401, detail="Token inválido")
+
+@app.get("/users/me")
+async def read_users_me(current_user: User = Depends(get_current_user_from_token)):
+    return current_user
+
+# --- test_main.py (Tu archivo de tests) ---
+from fastapi.testclient import TestClient
+# from .main import app, get_current_user_from_token, User # Importa desde tu app
+
+# Esta es la dependencia de TEST.
+# No hace llamadas externas, es instantánea.
+async def override_get_current_user() -> User:
+    print("Llamando a la dependencia de TEST (override)")
+    return User(username="test_user", email="test@example.com")
+
+# --- Aquí ocurre la magia ---
+# Sobrescribimos la dependencia `get_current_user_from_token`
+# con nuestra función `override_get_current_user`.
+app.dependency_overrides[get_current_user_from_token] = override_get_current_user
+
+client = TestClient(app)
+
+def test_read_users_me():
+    # No necesitamos pasar ningún token, porque la dependencia
+    # que lo requería (`get_current_user_from_token`) ha sido reemplazada.
+    response = client.get("/users/me")
+    
+    assert response.status_code == 200
+    assert response.json() == {
+        "username": "test_user",
+        "email": "test@example.com"
+    }
+    # Y la dependencia original de producción NUNCA fue llamada.
+
+# Limpiamos el override después del test si es necesario
+# (Pytest lo maneja mejor con fixtures)
+app.dependency_overrides = {}
+
+</code></pre>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 pt-8 border-t border-gray-300"> <!-- Borde más claro -->
+            <p class="text-gray-600">Guía Avanzada de FastAPI Depends &copy; 2025</p> <!-- Tono de gris ajustado -->
+        </footer>
+
+    </div>
+
+    <!-- Script para inicializar highlight.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+
+</body>
+</html>
