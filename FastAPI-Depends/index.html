@@ -5,212 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guía Avanzada de FastAPI Depends</title>
     
-    <!-- Tailwind CSS para el layout y la base moderna -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Our own FastAPI-Depends styles -->
+    <link rel="stylesheet" href="fastapi-styles.css">
     
-    <!-- highlight.js para el resaltado de código -->
+    <!-- highlight.js for code syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
+    
     <!-- Google Fonts - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        /* Paleta de colores personalizada */
-        :root {
-            --madder: #a20021ff;
-            --folly: #f52f57ff;
-            --sandy-brown: #f79d5cff;
-            --pumpkin: #f3752bff;
-            --ghost-white: #ededf4ff;
-        }
-
-        /* Estilos personalizados para el look & feel moderno */
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--ghost-white); /* Fondo claro (nuevo) */
-            color: #1a1a1a; /* Texto oscuro (nuevo) */
-            overflow-x: hidden;
-            /* Animación sutil de entrada */
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        /* Título principal con gradiente y animación de pulso (NUEVA PALETA) */
-        .header-title {
-            background: linear-gradient(90deg, var(--madder), var(--folly), var(--pumpkin));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: gradientPulse 8s ease infinite;
-        }
-
-        @keyframes gradientPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Tarjeta de contenido con diseño plano y moderno (SIN GLOW) */
-        .content-card {
-            background: #ffffff; /* Fondo blanco */
-            border-radius: 20px;
-            border: 1px solid #e0e0e0; /* Borde sutil */
-            /* Sombra moderna y sutil (reemplaza el glow) */
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
-                        0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        /* Animación sutil al hacer hover (actualizada) */
-        .content-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.07),
-                        0 12px 15px -6px rgba(0, 0, 0, 0.07);
-        }
-
-        /* Estilo para los bloques de código (Mantenemos tema oscuro para el código) */
-        pre {
-            background-color: #282c34; /* Fondo oscuro de Atom One Dark */
-            border-radius: 12px;
-            border: 1px solid #444;
-            /* Se elimina el 'box-shadow' inset para un look más plano */
-            box-shadow: none;
-        }
-
-        /* Personalización de la barra de scroll (Tema claro) */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e0e0e0;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #b0b0b0;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--folly); /* Color de acento al hacer hover */
-        }
-
-        /* Títulos de sección con la nueva paleta */
-        section h2 {
-            color: var(--madder);
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 280px;
-            height: 100vh;
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border-right: 1px solid #e0e0e0;
-            padding: 30px 20px;
-            overflow-y: auto;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background: var(--folly);
-            border: none;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(245, 47, 87, 0.3);
-        }
-
-        .sidebar-toggle:hover {
-            background: var(--madder);
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(162, 0, 33, 0.4);
-        }
-
-        .sidebar h3 {
-            color: var(--madder);
-            font-size: 1.3rem;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .nav-item {
-            display: block;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            color: #1a1a1a;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background: rgba(245, 47, 87, 0.1);
-            border-color: rgba(245, 47, 87, 0.3);
-            transform: translateX(5px);
-            box-shadow: 0 4px 15px rgba(245, 47, 87, 0.2);
-        }
-
-        .nav-item.active {
-            background: rgba(245, 47, 87, 0.15);
-            border-color: var(--folly);
-            box-shadow: 0 0 20px rgba(245, 47, 87, 0.3);
-            color: var(--madder);
-            font-weight: 600;
-        }
-
-        /* Main content adjustment */
-        .main-content {
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
-        }
-
-        /* Mobile responsive */
-        .sidebar.hidden {
-            transform: translateX(-100%);
-        }
-
-        .main-content.full-width {
-            margin-left: 0;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 250px;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .sidebar.hidden {
-                transform: translateX(-100%);
-            }
-        }
-
-        /* Clases de resaltado para el texto */
-        .text-highlight-1 {
-            color: var(--folly);
-            font-weight: 700;
-        }
-        .text-highlight-2 {
-            color: var(--pumpkin);
-            font-weight: 700;
-        }
-        
-    </style>
 </head>
 <body class=""> <!-- Clases de Tailwind eliminadas, controladas por CSS -->
 
@@ -246,7 +51,7 @@
         </a>
         
         <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(245, 47, 87, 0.2);">
-            <a href="quiz.html" class="nav-item" onclick="setActive(this)">
+            <a href="quiz.html" class="nav-item">
                 🎯 Take Quiz
             </a>
         </div>
@@ -601,55 +406,7 @@ app.dependency_overrides = {}
     </div>
     </div> <!-- Close main-content -->
 
-    <!-- Script para inicializar highlight.js -->
-    <script>
-        // Toggle sidebar visibility
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const toggleBtn = document.querySelector('.sidebar-toggle');
-            
-            sidebar.classList.toggle('hidden');
-            mainContent.classList.toggle('full-width');
-            toggleBtn.classList.toggle('sidebar-open');
-        }
-
-        // Set active navigation item
-        function setActive(element) {
-            // Remove active class from all items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            // Add active class to clicked element
-            element.classList.add('active');
-        }
-
-        // Smooth scrolling for navigation links
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            // Set first nav-item as active on page load
-            const firstNavItem = document.querySelector('.nav-item');
-            if (firstNavItem) {
-                firstNavItem.classList.add('active');
-            }
-            
-            // Initialize highlight.js
-            hljs.highlightAll();
-        });
-    </script>
-
+    <!-- Our own FastAPI-Depends script -->
+    <script src="fastapi-script.js"></script>
 </body>
 </html>
